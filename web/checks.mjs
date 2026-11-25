@@ -1,11 +1,19 @@
 export const requirements = {
   filter: {
     label: "Hide completed tasks in the open list",
-    expected: "The target leaves Open tasks, stays completed in All tasks, and a second open task stays visible."
+    expected: "The target leaves Open tasks, stays completed in All tasks, and a second open task stays visible.",
+    steps: [
+      "In Open tasks, mark “Write project abstract” complete.",
+      "Check the two tasks in Open tasks, then switch to All tasks and find “Write project abstract”."
+    ]
   },
   reload: {
     label: "Keep completion after a reload",
-    expected: "The same task is still marked complete after the browser loads a new document."
+    expected: "The same task is still marked complete after the browser loads a new document.",
+    steps: [
+      "In All tasks, mark “Write project abstract” complete.",
+      "Select Reload preview, open All tasks again and check the status of “Write project abstract”."
+    ]
   }
 };
 

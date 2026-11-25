@@ -40,4 +40,5 @@ flowchart TB
 - **Observed evidence.** The list check measures membership and completion in the rendered task list. The reload check compares the state of the target task across two actual browser documents. Check frames use separate storage keys and remove their test state on completion.
 - **Review scope.** Session storage supports reload of the current tab. Visual presentation can be assessed using the manual preview. Acceptance covers the selected requirements and current candidate.
 - **Candidate comparison.** The runner executes each confirmed check for both candidates. The workbench keeps the observations under their respective candidates and clears the comparison when the reviewer changes scope.
+- **Repair feedback.** The workbench combines the selected candidate's failed observations with that check's expected behaviour and reproduction steps. The reviewer can edit the resulting text before copying it.
 - **Planned option.** A model could propose check IDs and clarifying questions. The browser runner would still derive evidence from the candidate application.

@@ -135,6 +135,16 @@
             <div class="decision-actions">
               <button type="button" id="defer" disabled>Defer decision</button>
               <button type="button" id="accept" class="button-accent" disabled>Accept checked scope</button>
+              <button type="button" id="draft-feedback" aria-controls="feedback-panel" aria-expanded="false" hidden>Draft repair feedback</button>
+            </div>
+            <div class="feedback-panel" id="feedback-panel" hidden>
+              <label for="feedback-text">Repair feedback</label>
+              <p id="feedback-help">Review and edit this draft before sharing it with the person or tool making the repair.</p>
+              <textarea id="feedback-text" aria-describedby="feedback-help" rows="8" spellcheck="false"></textarea>
+              <div class="decision-actions">
+                <button type="button" id="copy-feedback" class="button-accent">Copy feedback</button>
+                <p id="feedback-status" role="status"></p>
+              </div>
             </div>
           </div>
         </section>

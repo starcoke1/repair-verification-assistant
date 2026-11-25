@@ -1,10 +1,14 @@
 import { BrowserPreview, withCheckPreview } from "./browser-preview.mjs";
 import { checkFilter, checkReload, requirements } from "./checks.mjs";
 import { interpretRequest } from "./intent.mjs";
+import { buildFeedback, failedRequirements } from "./feedback.mjs";
 import { canAccept, createReview, nextCandidate, recordResult } from "./review.mjs";
 
 const byId = (id) => document.getElementById(id);
 const request = byId("request");
+const feedbackPanel = byId("feedback-panel");
+const feedbackText = byId("feedback-text");
+const feedbackStatus = byId("feedback-status");
 const suggestion = byId("suggestion");
 const scopeInputs = Array.from(byId("scope-options").querySelectorAll("input"));
 const candidateButtons = Array.from(document.querySelectorAll("button[data-candidate]"));
@@ -105,6 +109,10 @@ function render() {
   byId("defer").textContent = review.decision === "deferred" ? "Resume review" : "Defer decision";
   byId("defer").disabled = !confirmed || locked || review.decision === "accepted";
   byId("accept").disabled = locked || !canAccept(review) || review.decision === "accepted";
+  byId("draft-feedback").hidden = failedRequirements(review).length === 0;
+  byId("draft-feedback").disabled = locked;
+  byId("draft-feedback").textContent = feedbackPanel.hidden ? "Draft repair feedback" : "Hide repair feedback";
+  byId("draft-feedback").setAttribute("aria-expanded", String(!feedbackPanel.hidden));
   byId("decision-message").textContent = decisionText();
 
   for (const row of rows) {
@@ -123,7 +131,14 @@ function render() {
   }
 }
 
+function clearFeedback() {
+  feedbackPanel.hidden = true;
+  feedbackText.value = "";
+  feedbackStatus.textContent = "";
+}
+
 function clearReview({ keepInterpretation = false } = {}) {
+  clearFeedback();
   review = createReview(review.candidate);
   comparison = null;
   byId("comparison-progress").textContent = "";
@@ -179,6 +194,7 @@ byId("edit-scope").addEventListener("click", () => {
 });
 
 async function loadCandidate(candidate) {
+  clearFeedback();
   changingPreview = true;
   hasReloaded = false;
   byId("preview-message").textContent = "Loading Candidate " + candidate + "…";
@@ -258,6 +274,7 @@ function comparisonRow(id, first, second) {
 async function runComparison() {
   if (running || changingPreview || !review.selected.length) return;
   running = true;
+  clearFeedback();
   comparison = null;
   render();
   const results = { A: {}, B: {} };
@@ -280,6 +297,7 @@ async function runComparison() {
 async function runChecks(ids) {
   if (running || changingPreview || ids.some((id) => !review.selected.includes(id))) return;
   running = true;
+  clearFeedback();
   comparison = null;
   byId("comparison-progress").textContent = "";
   for (const id of ids) {
@@ -298,6 +316,30 @@ for (const trigger of document.querySelectorAll("[data-run]")) {
 }
 byId("run-selected").addEventListener("click", () => void runChecks(review.selected));
 byId("compare-candidates").addEventListener("click", () => void runComparison());
+byId("draft-feedback").addEventListener("click", () => {
+  if (feedbackPanel.hidden) {
+    if (!feedbackText.value) feedbackText.value = buildFeedback(review);
+    feedbackPanel.hidden = !feedbackText.value;
+    render();
+    if (!feedbackPanel.hidden) feedbackText.focus();
+    return;
+  }
+  feedbackPanel.hidden = true;
+  render();
+});
+feedbackText.addEventListener("input", () => { feedbackStatus.textContent = ""; });
+byId("copy-feedback").addEventListener("click", async () => {
+  const text = feedbackText.value;
+  try {
+    await navigator.clipboard.writeText(text);
+    if (!feedbackPanel.hidden && feedbackText.value === text) feedbackStatus.textContent = "Feedback copied.";
+  } catch {
+    if (feedbackPanel.hidden || feedbackText.value !== text) return;
+    feedbackText.focus();
+    feedbackText.select();
+    feedbackStatus.textContent = "Text selected. Use your copy shortcut to copy it.";
+  }
+});
 byId("defer").addEventListener("click", () => {
   review = { ...review, decision: review.decision === "deferred" ? null : "deferred" };
   render();

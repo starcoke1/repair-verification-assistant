@@ -8,9 +8,11 @@ These captures come from the Playwright browser suite. Use the workbench and the
 
 1. Select **Try the example**. It loads Candidate A and suggests both checks. Confirm the scope.
 2. Run the list check. It passes. Run the reload check. The task is open in the new preview document and the check fails.
-3. Select **Defer decision**. The workbench shows the decision and proof of each outcome.
+3. Select **Defer decision**. The workbench shows the decision and proof of each outcome. Select **Draft repair feedback** to edit or copy the failed check's reproduction steps, expected behaviour and browser observations.
 
 ![Candidate A with a passing list check, a failing reload check and a deferred decision](evidence/candidate-a-failed.png)
+
+![Editable repair feedback for Candidate A showing reproduction steps, expected behaviour and observations](evidence/repair-feedback.png)
 
 ## The revised candidate is accepted
 

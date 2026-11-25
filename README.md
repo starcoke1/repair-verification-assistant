@@ -1,6 +1,6 @@
 # Repair Verification Assistant
 
-Prose word count **613**. Headings and link text are included. Code blocks and setup commands are excluded.
+Prose word count **698**. Headings and link text are included. Code blocks and setup commands are excluded.
 
 A review workbench for a beginner with a candidate to-do app repair. Confirm the requirements, inspect browser evidence and decide what to accept.
 
@@ -21,6 +21,8 @@ node serve.mjs
 Select **Try the example** to load Candidate A and fill in both requirements. Confirm the scope and run both checks. Review the evidence and defer. Switch to Candidate B, run both checks and accept the checked scope. You can also write your own request or reproduce the behaviour in the manual preview.
 
 Select **Compare A and B** after confirming scope to run both candidates against the same requirements. Expand a result for observations. Switch to the candidate you want to review to use its own comparison results.
+
+When a selected check fails, select **Draft repair feedback**. Edit the reproduction steps, expected behaviour or observations as needed, then select **Copy feedback** to share the text yourself.
 
 ## Technology and checks
 
@@ -46,10 +48,11 @@ The browser suite covers both candidates, manual reload, scope edits, context-se
 | Add a first-run example and an evidence summary. | The student asked for clearer guidance and an explanation of reload. The example fills in the two requirements. A browser test follows the progress indicator from confirmation to the split outcome. |
 | Add request guidance and three selectable examples. | The student asked what belongs in the input. The examples demonstrate list-only scope, both checks and a request that needs clarification. Browser tests inspect each response and check that earlier evidence clears when the request changes. |
 | Add a side-by-side comparison. | Rerunning the same requirements makes it possible to see which behaviour improved. Browser tests verify that the comparison reuses the checks, keeps evidence attached to each candidate and clears when scope changes. |
+| Draft editable feedback from failed checks. | The student manually walked through the request and comparison workflow, then agreed to add feedback before writing the report. The browser suite checks the draft against Candidate A's actual result, copies an edited version and verifies that switching to B clears the draft. |
 
 ## Authorship and AI assistance
 
-The student's A1 work supplied the research question and the to-do example. Codex drafted the interface, rule set, candidate examples, checks and documentation. A separate Codex reviewer found cases where the rules could reverse a request to keep tasks visible or imply support for reopening a closed tab. Codex revised the rules and ran targeted checks. Student review of this revision is pending.
+The student's A1 work supplied the research question and the to-do example. Codex drafted the interface, rule set, candidate examples, checks and documentation. A separate Codex reviewer found cases where the rules could reverse a request to keep tasks visible or imply support for reopening a closed tab. Codex revised the rules and ran targeted checks. The student confirmed the earlier manual walkthrough. Student review of the feedback feature is pending.
 
 ## Supporting material
 

@@ -43,6 +43,43 @@ async function confirmBoth(page) {
 
 const status = (page, id) => page.locator('[data-check="' + id + '"] [data-result]');
 
+test("a failed candidate produces editable feedback that can be copied and is cleared on switching", async (t) => {
+  const page = await openWorkbench(t, { viewport: { width: 1440, height: 1050 } }, (page) => page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: async (value) => { window.copiedFeedback = value; } }
+    });
+  }));
+  const draft = page.getByRole("button", { name: "Draft repair feedback" });
+  const textbox = page.getByRole("textbox", { name: "Repair feedback" });
+  await confirmBoth(page);
+  await page.getByRole("button", { name: "Compare A and B" }).click();
+  await expectStatus(page, "reload", "Failed");
+  await draft.click();
+  const text = await textbox.inputValue();
+  assert.match(text, /Candidate A/);
+  assert.match(text, /Reload preview/);
+  assert.match(text, /Expected/);
+  assert.match(text, /Actual/);
+  assert.match(text, /was open after a new document loaded/);
+  assert.doesNotMatch(text, /Hide completed tasks in the open list/);
+  await capture(page, "repair-feedback.png");
+
+  await textbox.fill(text + "\nPlease recheck after the next repair.");
+  const edited = await textbox.inputValue();
+  await page.getByRole("button", { name: "Hide repair feedback" }).click();
+  await draft.click();
+  assert.equal(await textbox.inputValue(), edited);
+  await page.getByRole("button", { name: "Copy feedback" }).click();
+  await page.getByText("Feedback copied.", { exact: true }).waitFor();
+  assert.equal(await page.evaluate(() => window.copiedFeedback), await textbox.inputValue());
+  await page.getByRole("button", { name: "Candidate B" }).click();
+  await page.getByText("Candidate B loaded.", { exact: true }).waitFor();
+  await expectStatus(page, "reload", "Passed");
+  await textbox.waitFor({ state: "hidden" });
+  assert.equal(await draft.isVisible(), false);
+  assert.ok(await page.getByRole("button", { name: "Accept checked scope" }).isEnabled());
+});
+
 test("comparison runs both candidates against one scope and keeps evidence tied to its candidate", async (t) => {
   const page = await openWorkbench(t, { viewport: { width: 1440, height: 1050 } });
   const compare = page.getByRole("button", { name: "Compare A and B" });
