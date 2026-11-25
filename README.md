@@ -1,6 +1,6 @@
 # Repair Verification Assistant
 
-Prose word count **698**. Headings and link text are included. Code blocks and setup commands are excluded.
+Prose word count **782**. Headings and link text are included. Code blocks and setup commands are excluded.
 
 A review workbench for a beginner with a candidate to-do app repair. Confirm the requirements, inspect browser evidence and decide what to accept.
 
@@ -50,9 +50,11 @@ The browser suite covers both candidates, manual reload, scope edits, context-se
 | Add a side-by-side comparison. | Rerunning the same requirements makes it possible to see which behaviour improved. Browser tests verify that the comparison reuses the checks, keeps evidence attached to each candidate and clears when scope changes. |
 | Draft editable feedback from failed checks. | The student manually walked through the request and comparison workflow, then agreed to add feedback before writing the report. The browser suite checks the draft against Candidate A's actual result, copies an edited version and verifies that switching to B clears the draft. |
 
-## Authorship and AI assistance
+## Using AI
 
-The student's A1 work supplied the research question and the to-do example. Codex drafted the interface, rule set, candidate examples, checks and documentation. A separate Codex reviewer found cases where the rules could reverse a request to keep tasks visible or imply support for reopening a closed tab. Codex revised the rules and ran targeted checks. The student confirmed the earlier manual walkthrough. Student review of the feedback feature is pending.
+I brought the research question and to-do example from my A1 review and chose to focus on how a beginner checks a repair before accepting it. I used Codex to discuss design options, draft the implementation and tests, and organise the documentation. I tried the request and comparison flow myself. When I found that the input did not explain what to type, I asked for concrete examples and verified the revised flow. I decided to keep live model integration as future work so that the demonstration could run locally without credentials.
+
+Codex helped turn these discussions into code and checks. An AI-assisted review identified two cases where the rules could misread a request about keeping tasks visible or reopening a closed tab. The rules were revised and tested with those requests. I agreed to add a feedback draft tied to the failed browser check. Its generated text, editing and copy action were checked in the browser suite.
 
 ## Supporting material
 
