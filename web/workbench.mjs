@@ -21,6 +21,7 @@ let hasReloaded = false;
 let changingPreview = false;
 let activeCheck = null;
 let running = false;
+let comparison = null;
 
 function selectedInputs() {
   return scopeInputs.filter((input) => input.checked).map((input) => input.value);
@@ -99,6 +100,8 @@ function render() {
     ? " · " + review.selected.length + (review.selected.length === 1 ? " requirement selected" : " requirements selected")
     : " · Confirm the scope to run checks.");
   byId("run-selected").disabled = !confirmed || locked;
+  byId("compare-candidates").disabled = !confirmed || locked;
+  byId("comparison").hidden = comparison === null;
   byId("defer").textContent = review.decision === "deferred" ? "Resume review" : "Defer decision";
   byId("defer").disabled = !confirmed || locked || review.decision === "accepted";
   byId("accept").disabled = locked || !canAccept(review) || review.decision === "accepted";
@@ -122,6 +125,8 @@ function render() {
 
 function clearReview({ keepInterpretation = false } = {}) {
   review = createReview(review.candidate);
+  comparison = null;
+  byId("comparison-progress").textContent = "";
   if (!keepInterpretation) interpretation = null;
   byId("scope-message").textContent = "";
   render();
@@ -193,6 +198,7 @@ for (const button of candidateButtons) {
   button.addEventListener("click", () => {
     if (review.candidate === button.dataset.candidate) return;
     review = nextCandidate(review, button.dataset.candidate);
+    if (comparison) review.results = comparison[review.candidate];
     void loadCandidate(review.candidate);
   });
 }
@@ -212,18 +218,74 @@ byId("reload-preview").addEventListener("click", async () => {
   }
 });
 
+async function evaluateCheck(candidate, id) {
+  try {
+    return await withCheckPreview(byId("isolated-checks"), candidate, evaluators[id]);
+  } catch (error) {
+    return { status: "error", observations: [error.message] };
+  }
+}
+
+function comparisonRow(id, first, second) {
+  const row = document.createElement("tr");
+  const name = document.createElement("th");
+  const change = document.createElement("small");
+  name.scope = "row";
+  name.textContent = requirements[id].label;
+  if (first.status === "passed" && second.status === "passed") change.textContent = "Passed in both";
+  if (first.status === "failed" && second.status === "passed") change.textContent = "Failed in A, passed in B";
+  if (change.textContent) name.append(change);
+  row.append(name);
+
+  for (const result of [first, second]) {
+    const cell = document.createElement("td");
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    const badge = document.createElement("span");
+    const observations = document.createElement("ul");
+    badge.className = "result";
+    badge.dataset.result = result.status;
+    badge.textContent = resultLabels[result.status];
+    summary.append(badge);
+    showList(observations, result.observations);
+    details.append(summary, observations);
+    cell.append(details);
+    row.append(cell);
+  }
+  return row;
+}
+
+async function runComparison() {
+  if (running || changingPreview || !review.selected.length) return;
+  running = true;
+  comparison = null;
+  render();
+  const results = { A: {}, B: {} };
+  for (const candidate of Object.keys(results)) {
+    byId("comparison-progress").textContent = "Checking Candidate " + candidate + " against the confirmed scope.";
+    for (const id of review.selected) {
+      results[candidate][id] = await evaluateCheck(candidate, id);
+    }
+  }
+  comparison = results;
+  review = { ...review, results: comparison[review.candidate], decision: null };
+  byId("comparison").querySelector("tbody").replaceChildren(
+    ...review.selected.map((id) => comparisonRow(id, results.A[id], results.B[id]))
+  );
+  byId("comparison-progress").textContent = "Comparison ready.";
+  running = false;
+  render();
+}
+
 async function runChecks(ids) {
   if (running || changingPreview || ids.some((id) => !review.selected.includes(id))) return;
   running = true;
+  comparison = null;
+  byId("comparison-progress").textContent = "";
   for (const id of ids) {
     activeCheck = id;
     render();
-    let result;
-    try {
-      result = await withCheckPreview(byId("isolated-checks"), review.candidate, evaluators[id]);
-    } catch (error) {
-      result = { status: "error", observations: [error.message] };
-    }
+    const result = await evaluateCheck(review.candidate, id);
     review = recordResult(review, id, result);
   }
   activeCheck = null;
@@ -235,6 +297,7 @@ for (const trigger of document.querySelectorAll("[data-run]")) {
   trigger.addEventListener("click", () => void runChecks([trigger.dataset.run]));
 }
 byId("run-selected").addEventListener("click", () => void runChecks(review.selected));
+byId("compare-candidates").addEventListener("click", () => void runComparison());
 byId("defer").addEventListener("click", () => {
   review = { ...review, decision: review.decision === "deferred" ? null : "deferred" };
   render();

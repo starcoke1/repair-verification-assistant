@@ -43,6 +43,42 @@ async function confirmBoth(page) {
 
 const status = (page, id) => page.locator('[data-check="' + id + '"] [data-result]');
 
+test("comparison runs both candidates against one scope and keeps evidence tied to its candidate", async (t) => {
+  const page = await openWorkbench(t, { viewport: { width: 1440, height: 1050 } });
+  const compare = page.getByRole("button", { name: "Compare A and B" });
+  const accept = page.getByRole("button", { name: "Accept checked scope" });
+  const table = page.getByRole("table", { name: "Candidate comparison" });
+  assert.ok(await compare.isDisabled());
+  await confirmBoth(page);
+  await compare.click();
+  const reloadRow = table.getByRole("row", { name: /Keep completion after a reload/ });
+  await reloadRow.getByText("Failed in A, passed in B", { exact: true }).waitFor();
+  assert.equal(await table.getByRole("row").count(), 3);
+  await reloadRow.getByText("Failed", { exact: true }).click();
+  await reloadRow.getByText("The target task was open after a new document loaded.").waitFor();
+  await expectStatus(page, "reload", "Failed");
+  assert.ok(await accept.isDisabled());
+  await capture(page, "candidate-comparison.png");
+
+  await page.getByRole("button", { name: "Candidate B" }).click();
+  await page.getByText("Candidate B loaded.").waitFor();
+  await expectStatus(page, "reload", "Passed");
+  assert.ok(await accept.isEnabled());
+  await accept.click();
+  await page.getByText("Accepted Candidate B for both selected requirements.").waitFor();
+
+  await page.getByRole("button", { name: "Edit scope" }).click();
+  await table.waitFor({ state: "hidden" });
+  await page.getByRole("checkbox", { name: /Keep completion after a reload/ }).uncheck();
+  await page.getByRole("button", { name: "Confirm scope" }).click();
+  await compare.click();
+  await table.getByText("Passed in both", { exact: true }).waitFor();
+  assert.equal(await table.getByRole("row").count(), 2);
+  await page.setViewportSize({ width: 320, height: 800 });
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await capture(page, "comparison-narrow.png");
+});
+
 test("request examples show the supported scope and invalidate earlier evidence", async (t) => {
   const page = await openWorkbench(t, { viewport: { width: 390, height: 850 } });
   const list = page.getByRole("checkbox", { name: /Hide completed tasks/ });

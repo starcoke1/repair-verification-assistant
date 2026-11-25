@@ -186,6 +186,17 @@ input[type="checkbox"] { flex: 0 0 auto; margin: 0; width: 1rem; height: 1rem; a
   font-size: .875rem;
   font-weight: 650;
 }
+.comparison-progress { margin: 0 1rem; color: var(--muted); font-size: .875rem; }
+.comparison-progress:not(:empty) { padding-block: .5rem; }
+.comparison { padding: 0 1rem .8rem; min-width: 0; }
+.comparison table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .875rem; }
+.comparison caption { text-align: left; font-weight: 660; margin-block-end: .35rem; }
+.comparison th, .comparison td { padding: .45rem .35rem; text-align: left; vertical-align: top; border-block-start: 1px solid var(--line); overflow-wrap: anywhere; }
+.comparison th:first-child { width: 43%; }
+.comparison small { display: block; font-weight: 500; color: var(--muted); margin-block-start: .2rem; }
+.comparison summary { cursor: pointer; }
+.comparison details ul { margin: .4rem 0 0; padding-inline-start: .95rem; }
+.comparison > p { margin-block-start: .45rem; color: var(--muted); font-size: .875rem; }
 .check-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-block: 1px solid var(--line); }
 [data-check] { min-width: 0; display: grid; align-content: start; align-items: start; gap: .55rem; padding: .8rem 1rem; }
 [data-check] + [data-check] { border-inline-start: 1px solid var(--line); }

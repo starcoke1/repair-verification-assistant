@@ -20,6 +20,10 @@ These captures come from the Playwright browser suite. Use the workbench and the
 
 ![Candidate B with both checks passing and acceptance confirmed](evidence/candidate-b-accepted.png)
 
+With both requirements confirmed, **Compare A and B** runs the same checks on both candidates. Expand the failed reload result to see what the browser observed. Switching to Candidate B presents its own results for the acceptance decision.
+
+![Both candidates pass the list check and only Candidate B passes the reload check](evidence/candidate-comparison.png)
+
 ## The reviewer corrects the scope
 
 1. Start with both checks in scope. Run the list check, then select **Edit scope**.

@@ -95,9 +95,21 @@
               <p id="evidence-context">Candidate A · Confirm the scope to run checks.</p>
               <p class="check-note">Checks use a fresh task list each time, separate from the manual preview.</p>
             </div>
-            <button type="button" id="run-selected" disabled>Run selected checks</button>
+            <div class="decision-actions">
+              <button type="button" id="run-selected" disabled>Run selected checks</button>
+              <button type="button" id="compare-candidates" disabled>Compare A and B</button>
+            </div>
           </header>
           <p id="check-summary" class="check-summary" role="status" hidden></p>
+          <p id="comparison-progress" class="comparison-progress" role="status"></p>
+          <div id="comparison" class="comparison" hidden>
+            <table aria-label="Candidate comparison">
+              <caption>Same requirements, two candidates</caption>
+              <thead><tr><th scope="col">Requirement</th><th scope="col">Candidate A</th><th scope="col">Candidate B</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <p>Open a result to see the browser observations. Switch candidates to make a decision.</p>
+          </div>
           <div class="check-list">
             <article data-check="filter" aria-labelledby="filter-heading">
               <div class="check-heading">
