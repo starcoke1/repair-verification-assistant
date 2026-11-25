@@ -9,6 +9,7 @@ const suggestion = byId("suggestion");
 const scopeInputs = Array.from(byId("scope-options").querySelectorAll("input"));
 const candidateButtons = Array.from(document.querySelectorAll("button[data-candidate]"));
 const rows = Array.from(document.querySelectorAll("[data-check]"));
+const steps = Array.from(document.querySelectorAll("[data-review-step]"));
 const preview = new BrowserPreview(byId("preview-frame"));
 const evaluators = { filter: checkFilter, reload: checkReload };
 const resultLabels = { passed: "Passed", failed: "Failed", error: "Check error" };
@@ -53,6 +54,31 @@ function decisionText() {
 function render() {
   const confirmed = review.selected.length > 0;
   const locked = running || changingPreview;
+  const results = review.selected.map((id) => review.results[id]?.status);
+  const settled = confirmed && results.every(Boolean);
+  const stage = !confirmed ? "scope" : running || !settled ? "checks" : "decision";
+  let previous = true;
+  for (const step of steps) {
+    const current = step.dataset.reviewStep === stage;
+    if (current) {
+      step.setAttribute("aria-current", "step");
+      previous = false;
+    } else {
+      step.removeAttribute("aria-current");
+    }
+    step.classList.toggle("step-done", previous || (current && review.decision === "accepted"));
+  }
+  const summary = byId("check-summary");
+  const counts = [
+    ["passed", "passed"], ["failed", "failed"], ["error", "could not run"], [undefined, "not run"]
+  ].map(([status, label]) => {
+    const count = results.filter((result) => result === status).length;
+    return count ? count + " " + label : null;
+  }).filter(Boolean);
+  const summaryText = counts.join(" · ");
+  if (summary.textContent !== summaryText) summary.textContent = summaryText;
+  summary.hidden = !confirmed;
+  byId("try-example").disabled = locked;
   suggestion.hidden = interpretation === null;
   byId("question").hidden = confirmed || !interpretation?.question;
   byId("interpret").disabled = locked;
@@ -110,6 +136,16 @@ byId("request-form").addEventListener("submit", (event) => {
   showList(byId("reasons"), interpretation.reasons);
   for (const input of scopeInputs) input.checked = interpretation.suggested.includes(input.value);
   render();
+});
+
+byId("try-example").addEventListener("click", async () => {
+  request.value = "Hide completed tasks from the open list. Keep completion after a reload.";
+  if (review.candidate !== "A") {
+    review = nextCandidate(review, "A");
+    await loadCandidate("A");
+  }
+  byId("request-form").requestSubmit();
+  byId("confirm-scope").focus();
 });
 
 request.addEventListener("input", () => {

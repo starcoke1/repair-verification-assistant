@@ -2,9 +2,11 @@
 
 These captures come from the Playwright browser suite. Use the workbench and the same sample request to replay the interactions.
 
+[First-run view with the example entry point and review progress](evidence/guided-start.png)
+
 ## A partial repair is deferred
 
-1. On Candidate A, select **Interpret request**. Add the reload check and confirm the scope.
+1. Select **Try the example**. It loads Candidate A and suggests both checks. Confirm the scope.
 2. Run the list check. It passes. Run the reload check. The task is open in the new preview document and the check fails.
 3. Select **Defer decision**. The workbench shows the decision and proof of each outcome.
 

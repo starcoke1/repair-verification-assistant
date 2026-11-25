@@ -17,16 +17,24 @@
   </header>
   <main class="shell">
     <div class="intro">
-      <h1>Which requirements did the repair meet?</h1>
-      <p>Confirm what should change, run browser checks, and decide whether to accept the candidate.</p>
+      <div>
+        <h1>Which requirements did the repair meet?</h1>
+        <p>Review a candidate repair and see what the browser actually observed.</p>
+      </div>
+      <button type="button" id="try-example" class="button-accent">Try the example</button>
     </div>
+    <ol class="review-progress" aria-label="Review progress">
+      <li data-review-step="scope" aria-current="step">Confirm scope</li>
+      <li data-review-step="checks">Run checks</li>
+      <li data-review-step="decision">Make a decision</li>
+    </ol>
 
     <div class="workbench">
       <section class="preview-panel" aria-labelledby="preview-title">
         <div class="preview-header">
           <div>
             <h2 id="preview-title">Task preview</h2>
-            <p>Try two prepared versions of the same task app.</p>
+            <p>Manual preview with two prepared repairs.</p>
           </div>
           <div class="candidate-control" role="group" aria-label="Repair candidate">
             <button type="button" data-candidate="A" aria-pressed="true">Candidate A</button>
@@ -59,7 +67,8 @@
             <fieldset id="scope-options">
               <legend>Checks to include</legend>
               <label><input type="checkbox" value="filter"> Hide completed tasks in the open list</label>
-              <label><input type="checkbox" value="reload"> Keep completion after a reload</label>
+              <label><input type="checkbox" value="reload" aria-describedby="reload-help"> Keep completion after a reload</label>
+              <p id="reload-help">A completed task should still be marked complete when the page loads again.</p>
             </fieldset>
             <div class="scope-actions">
               <button type="button" id="confirm-scope" class="button-accent">Confirm scope</button>
@@ -78,6 +87,7 @@
             </div>
             <button type="button" id="run-selected" disabled>Run selected checks</button>
           </header>
+          <p id="check-summary" class="check-summary" role="status" hidden></p>
           <div class="check-list">
             <article data-check="filter" aria-labelledby="filter-heading">
               <div class="check-heading">

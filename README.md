@@ -1,6 +1,6 @@
 # Repair Verification Assistant
 
-Prose word count **457**. Headings and link text are included. Code blocks and setup commands are excluded.
+Prose word count **499**. Headings and link text are included. Code blocks and setup commands are excluded.
 
 A review workbench for a beginner with a candidate to-do app repair. Confirm the requirements, inspect browser evidence and decide what to accept.
 
@@ -18,7 +18,7 @@ Use Node.js 20 or later and a current browser. Run this command from the project
 node serve.mjs
 ```
 
-Select **Interpret request**, include **Keep completion after a reload**, and confirm the scope. On Candidate A, run the list check and then the reload check. Review the evidence and defer. Switch to Candidate B, run both checks and accept the checked scope. The manual preview supports the same actions.
+Select **Try the example** to load Candidate A and fill in both requirements. Confirm the scope and run both checks. Review the evidence and defer. Switch to Candidate B, run both checks and accept the checked scope. You can also write your own request or reproduce the behaviour in the manual preview.
 
 ## Technology and checks
 
@@ -41,6 +41,7 @@ The browser suite covers both candidates, manual reload, scope edits, context-se
 | Replace the walkthrough's simulated refresh with a real frame reload. | Read the target's checkbox state in a new document. The same check exposed Candidate A's defect and passed for Candidate B. |
 | Ask about persistence, then let users confirm or edit scope. | A short request can leave persistence implicit. Browser tests confirmed that changing the live view changes the suggestion and editing scope clears old evidence. |
 | Require passing evidence for acceptance and allow resuming a deferred review. | This is a provisional implementation choice. Checks cover failed, deferred, resumed and accepted decisions. |
+| Add a first-run example and an evidence summary. | The student asked for clearer guidance and an explanation of reload. The example fills in the two requirements. A browser test follows the progress indicator from confirmation to the split outcome. |
 
 ## Authorship and AI assistance
 

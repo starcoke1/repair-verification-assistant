@@ -43,6 +43,25 @@ async function confirmBoth(page) {
 
 const status = (page, id) => page.locator('[data-check="' + id + '"] [data-result]');
 
+test("the guided example explains reload and shows progress from scope to decision", async (t) => {
+  const page = await openWorkbench(t, { viewport: { width: 1440, height: 1050 } });
+  const stage = () => page.locator('[aria-current="step"]').textContent();
+  await capture(page, "guided-start.png");
+  await page.getByRole("button", { name: "Try the example" }).click();
+  assert.match(await stage(), /Confirm scope/);
+  assert.ok(await page.getByRole("checkbox", { name: /Keep completion after a reload/ }).isChecked());
+  await page.getByText("A completed task should still be marked complete when the page loads again.").waitFor();
+  await page.getByRole("button", { name: "Confirm scope" }).click();
+  assert.match(await stage(), /Run checks/);
+  await page.getByRole("button", { name: "Run selected checks" }).click();
+  await expectStatus(page, "reload", "Failed");
+  await page.getByText("1 passed · 1 failed", { exact: true }).waitFor();
+  assert.match(await stage(), /Make a decision/);
+  await page.setViewportSize({ width: 390, height: 850 });
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await capture(page, "guided-mobile.png");
+});
+
 async function expectStatus(page, id, expected) {
   await status(page, id).filter({ hasText: new RegExp("^" + expected + "$") }).waitFor();
 }
