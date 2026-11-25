@@ -4,6 +4,7 @@
 flowchart TB
     accTitle: Repair verification architecture
     accDescr: The workbench sends a request and preview context to a rule-based simulation. Confirmed scope drives isolated browser checks. Actual observations return to the workbench for a human decision.
+    host[Local Node HTTP server]
     user[Beginner reviewer]
     ui[Workbench and scope]
     preview[Manual task preview]
@@ -13,6 +14,7 @@ flowchart TB
     storage[Tab session storage B]
     future[Live model planned option]
 
+    host -->|serves same-origin files| ui
     user -->|request and confirmation| ui
     ui -->|evidence and choices| user
     ui -->|select and reload| preview
@@ -41,4 +43,4 @@ flowchart TB
 - **Review scope.** Session storage supports reload of the current tab. Visual presentation can be assessed using the manual preview. Acceptance covers the selected requirements and current candidate.
 - **Candidate comparison.** The runner executes each confirmed check for both candidates. The workbench keeps the observations under their respective candidates and clears the comparison when the reviewer changes scope.
 - **Repair feedback.** The workbench combines the selected candidate's failed observations with that check's expected behaviour and reproduction steps. The reviewer can edit the resulting text before copying it.
-- **Planned option.** A model could propose check IDs and clarifying questions. The browser runner would still derive evidence from the candidate application.
+- **Planned option.** A model API could interpret phrasing the current rules miss and propose existing check IDs or a clarifying question. The reviewer would still confirm scope, and the browser runner would still derive evidence from the candidate application.

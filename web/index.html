@@ -12,24 +12,27 @@
   <header class="site-header">
     <div class="site-inner">
       <div class="wordmark"><span class="mark" aria-hidden="true"></span> Repair Verification Assistant</div>
-      <span class="header-note">To-do application review</span>
     </div>
   </header>
-  <main class="shell">
-    <div class="intro">
-      <div>
-        <h1>Which requirements did the repair meet?</h1>
-        <p>Review a candidate repair and see what the browser actually observed.</p>
+  <main>
+    <div class="review-overview">
+      <div class="shell">
+        <div class="intro">
+          <div>
+            <h1>Which requirements did the repair meet?</h1>
+            <p>Compare two repairs to a to-do app and decide what the browser evidence supports.</p>
+          </div>
+          <button type="button" id="try-example" class="button-accent">Try the example</button>
+        </div>
+        <ol class="review-progress" aria-label="Review progress">
+          <li data-review-step="scope" aria-current="step">Confirm scope</li>
+          <li data-review-step="checks">Run checks</li>
+          <li data-review-step="decision">Make a decision</li>
+        </ol>
       </div>
-      <button type="button" id="try-example" class="button-accent">Try the example</button>
     </div>
-    <ol class="review-progress" aria-label="Review progress">
-      <li data-review-step="scope" aria-current="step">Confirm scope</li>
-      <li data-review-step="checks">Run checks</li>
-      <li data-review-step="decision">Make a decision</li>
-    </ol>
 
-    <div class="workbench">
+    <div class="shell workbench">
       <section class="preview-panel" aria-labelledby="preview-title">
         <div class="preview-header">
           <div>
