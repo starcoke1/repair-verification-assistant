@@ -43,6 +43,25 @@ async function confirmBoth(page) {
 
 const status = (page, id) => page.locator('[data-check="' + id + '"] [data-result]');
 
+test("request examples show the supported scope and invalidate earlier evidence", async (t) => {
+  const page = await openWorkbench(t, { viewport: { width: 390, height: 850 } });
+  const list = page.getByRole("checkbox", { name: /Hide completed tasks/ });
+  const reload = page.getByRole("checkbox", { name: /Keep completion after a reload/ });
+  await page.getByText("This demo checks task visibility and completion after a reload in the same tab.").waitFor();
+  await page.getByRole("button", { name: "List only", exact: true }).click();
+  assert.equal(await list.isChecked(), true);
+  assert.equal(await reload.isChecked(), false);
+  await page.getByRole("button", { name: "Confirm scope" }).click();
+  await page.getByRole("button", { name: "Run selected checks" }).click();
+  await expectStatus(page, "filter", "Passed");
+  await page.getByRole("button", { name: "Ask a vague request" }).click();
+  await page.getByText("Should this repair also preserve completion after a reload?").waitFor();
+  await expectStatus(page, "filter", "Awaiting scope");
+  await page.getByRole("button", { name: "List and reload" }).click();
+  assert.equal(await reload.isChecked(), true);
+  await capture(page, "request-examples.png");
+});
+
 test("the guided example explains reload and shows progress from scope to decision", async (t) => {
   const page = await openWorkbench(t, { viewport: { width: 1440, height: 1050 } });
   const stage = () => page.locator('[aria-current="step"]').textContent();

@@ -10,6 +10,7 @@ const scopeInputs = Array.from(byId("scope-options").querySelectorAll("input"));
 const candidateButtons = Array.from(document.querySelectorAll("button[data-candidate]"));
 const rows = Array.from(document.querySelectorAll("[data-check]"));
 const steps = Array.from(document.querySelectorAll("[data-review-step]"));
+const requestExamples = Array.from(document.querySelectorAll("[data-request-example]"));
 const preview = new BrowserPreview(byId("preview-frame"));
 const evaluators = { filter: checkFilter, reload: checkReload };
 const resultLabels = { passed: "Passed", failed: "Failed", error: "Check error" };
@@ -83,6 +84,7 @@ function render() {
   byId("question").hidden = confirmed || !interpretation?.question;
   byId("interpret").disabled = locked;
   request.disabled = locked;
+  for (const example of requestExamples) example.disabled = locked;
   byId("reload-preview").disabled = changingPreview;
   for (const button of candidateButtons) {
     button.disabled = locked;
@@ -147,6 +149,13 @@ byId("try-example").addEventListener("click", async () => {
   byId("request-form").requestSubmit();
   byId("confirm-scope").focus();
 });
+
+for (const example of requestExamples) {
+  example.addEventListener("click", () => {
+    request.value = example.dataset.requestExample;
+    byId("request-form").requestSubmit();
+  });
+}
 
 request.addEventListener("input", () => {
   if (interpretation) clearReview();

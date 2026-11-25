@@ -1,6 +1,6 @@
 # Repair Verification Assistant
 
-Prose word count **499**. Headings and link text are included. Code blocks and setup commands are excluded.
+Prose word count **542**. Headings and link text are included. Code blocks and setup commands are excluded.
 
 A review workbench for a beginner with a candidate to-do app repair. Confirm the requirements, inspect browser evidence and decide what to accept.
 
@@ -42,6 +42,7 @@ The browser suite covers both candidates, manual reload, scope edits, context-se
 | Ask about persistence, then let users confirm or edit scope. | A short request can leave persistence implicit. Browser tests confirmed that changing the live view changes the suggestion and editing scope clears old evidence. |
 | Require passing evidence for acceptance and allow resuming a deferred review. | This is a provisional implementation choice. Checks cover failed, deferred, resumed and accepted decisions. |
 | Add a first-run example and an evidence summary. | The student asked for clearer guidance and an explanation of reload. The example fills in the two requirements. A browser test follows the progress indicator from confirmation to the split outcome. |
+| Add request guidance and three selectable examples. | The student asked what belongs in the input. The examples demonstrate list-only scope, both checks and a request that needs clarification. Browser tests inspect each response and check that earlier evidence clears when the request changes. |
 
 ## Authorship and AI assistance
 

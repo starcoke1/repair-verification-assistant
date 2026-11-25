@@ -56,9 +56,19 @@
           </header>
           <form id="request-form">
             <label for="request">Describe the repair you expect</label>
+            <div class="request-help" id="request-help">
+              <p>Describe what you do and what should happen next. For example, “When I mark a task complete, hide it from Open tasks.”</p>
+              <p>This demo checks task visibility and completion after a reload in the same tab.</p>
+            </div>
             <div class="request-row">
-              <textarea id="request" rows="2" maxlength="500" required>Make completed tasks disappear.</textarea>
+              <textarea id="request" rows="2" maxlength="500" aria-describedby="request-help" required>Make completed tasks disappear.</textarea>
               <button type="submit" class="button-accent" id="interpret">Interpret request</button>
+            </div>
+            <div class="request-examples" role="group" aria-label="Try a sample request">
+              <span>Try a request</span>
+              <button type="button" data-request-example="Hide completed tasks from the open list. No need to check reload.">List only</button>
+              <button type="button" data-request-example="Hide completed tasks from the open list. Keep completion after a reload.">List and reload</button>
+              <button type="button" data-request-example="Make completed tasks disappear.">Ask a vague request</button>
             </div>
           </form>
           <div class="suggestion" id="suggestion" hidden>

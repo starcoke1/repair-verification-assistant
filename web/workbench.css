@@ -141,6 +141,11 @@ iframe { display: block; width: 100%; min-height: 19rem; border: 0; background: 
 }
 #request-form { display: grid; gap: .35rem; margin-block-start: .75rem; }
 #request-form > label { font-weight: 620; font-size: .9rem; }
+.request-help { display: grid; gap: .2rem; color: var(--muted); font-size: .875rem; margin-block-end: .3rem; }
+.request-examples { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .45rem; margin-block-start: .25rem; }
+.request-examples > span { color: var(--muted); font-size: .875rem; margin-inline-end: .15rem; }
+.request-examples button { min-height: 2.1rem; padding-block: .25rem; border-color: var(--line); }
+@media (pointer: coarse) { .request-examples button { min-height: 2.75rem; } }
 .request-row { display: flex; align-items: end; flex-wrap: wrap; gap: .55rem; }
 textarea {
   display: block;
