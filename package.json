@@ -1,0 +1,11 @@
+{
+  "name": "repair-verification-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node serve.mjs",
+    "test": "node --test tests/unit.test.mjs",
+    "test:browser": "node --test tests/browser.test.mjs"
+  }
+}

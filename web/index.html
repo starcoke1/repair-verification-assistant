@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A workbench for reviewing what a candidate to-do repair has actually changed.">
+  <title>Repair Verification Assistant</title>
+  <link rel="stylesheet" href="./workbench.css">
+  <script type="module" src="./workbench.mjs"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-inner">
+      <div class="wordmark"><span class="mark" aria-hidden="true"></span> Repair Verification Assistant</div>
+      <span class="header-note">To-do application review</span>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="intro">
+      <h1>Which requirements did the repair meet?</h1>
+      <p>Confirm what should change, run browser checks, and decide whether to accept the candidate.</p>
+    </div>
+
+    <div class="workbench">
+      <section class="preview-panel" aria-labelledby="preview-title">
+        <div class="preview-header">
+          <div>
+            <h2 id="preview-title">Task preview</h2>
+            <p>Try two prepared versions of the same task app.</p>
+          </div>
+          <div class="candidate-control" role="group" aria-label="Repair candidate">
+            <button type="button" data-candidate="A" aria-pressed="true">Candidate A</button>
+            <button type="button" data-candidate="B" aria-pressed="false">Candidate B</button>
+          </div>
+        </div>
+        <iframe id="preview-frame" title="Interactive to-do preview"></iframe>
+        <footer class="preview-footer">
+          <button type="button" id="reload-preview">Reload preview</button>
+          <p id="preview-message" role="status"></p>
+        </footer>
+      </section>
+
+      <div class="review-panel">
+        <section class="scope-panel" aria-labelledby="scope-title">
+          <header class="section-heading">
+            <h2 id="scope-title">Review scope</h2>
+            <span class="method">Rule-based AI simulation</span>
+          </header>
+          <form id="request-form">
+            <label for="request">Describe the repair you expect</label>
+            <div class="request-row">
+              <textarea id="request" rows="2" maxlength="500" required>Make completed tasks disappear.</textarea>
+              <button type="submit" class="button-accent" id="interpret">Interpret request</button>
+            </div>
+          </form>
+          <div class="suggestion" id="suggestion" hidden>
+            <p id="question"></p>
+            <ul id="reasons"></ul>
+            <fieldset id="scope-options">
+              <legend>Checks to include</legend>
+              <label><input type="checkbox" value="filter"> Hide completed tasks in the open list</label>
+              <label><input type="checkbox" value="reload"> Keep completion after a reload</label>
+            </fieldset>
+            <div class="scope-actions">
+              <button type="button" id="confirm-scope" class="button-accent">Confirm scope</button>
+              <button type="button" id="edit-scope" hidden>Edit scope</button>
+              <p id="scope-message" role="status"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="evidence-panel" aria-labelledby="evidence-title">
+          <header class="section-heading evidence-heading">
+            <div>
+              <h2 id="evidence-title">Check evidence</h2>
+              <p id="evidence-context">Candidate A · Confirm the scope to run checks.</p>
+              <p class="check-note">Checks use a fresh task list each time, separate from the manual preview.</p>
+            </div>
+            <button type="button" id="run-selected" disabled>Run selected checks</button>
+          </header>
+          <div class="check-list">
+            <article data-check="filter" aria-labelledby="filter-heading">
+              <div class="check-heading">
+                <h3 id="filter-heading">List behaviour</h3>
+                <span class="result" data-result>Awaiting scope</span>
+              </div>
+              <p class="expected"><strong>Expected</strong> <span data-expected></span></p>
+              <ul class="observations" data-observations hidden></ul>
+              <button type="button" data-run="filter" disabled>Run list check</button>
+            </article>
+            <article data-check="reload" aria-labelledby="reload-heading">
+              <div class="check-heading">
+                <h3 id="reload-heading">Reload behaviour</h3>
+                <span class="result" data-result>Awaiting scope</span>
+              </div>
+              <p class="expected"><strong>Expected</strong> <span data-expected></span></p>
+              <ul class="observations" data-observations hidden></ul>
+              <button type="button" data-run="reload" disabled>Run reload check</button>
+            </article>
+          </div>
+          <div class="decision-panel">
+            <p id="decision-message" role="status">Confirm a scope to start your review.</p>
+            <div class="decision-actions">
+              <button type="button" id="defer" disabled>Defer decision</button>
+              <button type="button" id="accept" class="button-accent" disabled>Accept checked scope</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div id="isolated-checks" hidden></div>
+  </main>
+</body>
+</html>

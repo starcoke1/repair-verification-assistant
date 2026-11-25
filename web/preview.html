@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>To-do preview</title>
+  <link rel="stylesheet" href="./preview.css">
+  <script type="module" src="./preview.mjs"></script>
+</head>
+<body>
+  <main id="todo-preview" aria-label="Sample to-do application">
+    <nav aria-label="Filter tasks">
+      <button type="button" data-view="open" aria-pressed="true">Open tasks</button>
+      <button type="button" data-view="all" aria-pressed="false">All tasks</button>
+    </nav>
+    <p id="preview-error" role="alert" hidden></p>
+    <ul id="task-list" aria-label="Tasks"></ul>
+    <p id="task-count" role="status"></p>
+  </main>
+</body>
+</html>
